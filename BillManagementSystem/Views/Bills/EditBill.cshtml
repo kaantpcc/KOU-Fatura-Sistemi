@@ -1,0 +1,55 @@
+﻿@model BillManagementSystem.ViewModels.EditBillViewModel
+
+<h1>Edit Bill</h1>
+
+@if(Model is null)
+{
+	<p>No bill was found in this Id.</p>
+}
+else
+{
+	<form method="post" enctype="multipart/form-data">
+
+		<div class="form-group mt-3">
+			<label for="BillId" class="form-label">Bill ID</label>
+			<input type="text" class="form-control text-black" id="BillId" asp-for="Id" readonly>
+		</div>
+
+		<div class="form-group mt-3">
+			<label for="BillDescription" class="form-label">Bill Description</label>
+			<input type="text" class="form-control" id="BillDescription" asp-for="BillDescription" placeholder="">
+		</div>
+
+		<div class="form-group mt-3">
+			<label for="BillName" class="form-label">Bill Person</label>
+			<input type="text" class="form-control text-black" id="BillName" asp-for="BillName" autocomplete="off" placeholder="@ViewBag.FName @ViewBag.LName" readonly>
+		</div>
+
+		<div class="form-group mt-3">
+			<label for="BillDepartment" class="form-label">Bill Department</label>
+			<select class="form-control" id="BillDepartment" asp-for="BillDepartment" asp-items="@Model.Departments">
+				<option value="">Please select a department</option>
+			</select>
+		</div>
+
+		<div class="form-group mt-3">
+			<label for="BillValue" class="form-label">Bill Value</label>
+			<input type="number" class="form-control" id="BillValue" asp-for="BillValue" placeholder="Enter bill value">
+		</div>
+
+		<div class="form-group mt-3">
+			<label for="BillImage" class="form-label">Bill Image</label>
+			<input type="file" class="form-control" id="BillImageFile" asp-for="BillImage">
+			<span asp-validation-for="BillImage" class="text-danger"></span>
+		</div>
+		
+		<div class="form-group mt-4">
+			<button type="submit" class="btn btn-primary">Save Changes</button>
+			<button type="submit" class="btn btn-danger ms-3" asp-action="DeleteBill" asp-controller="Bills">Delete</button>
+		</div>
+
+		
+	</form>
+}
+
+

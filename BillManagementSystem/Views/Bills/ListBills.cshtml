@@ -1,0 +1,117 @@
+﻿@model List<BillManagementSystem.Models.Entities.Bill>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<h1>Tüm Faturalar</h1>
+
+<select id="departmentSelect" class="form-control">
+    <option value="">Tüm Departmanlar</option>
+    <option value="TIP">Tıp Fakültesi</option>
+    <option value="MUH">Bilgisayar Mühendisliği</option>
+    <option value="ILT">Uluslararası İlişkiler</option>
+</select>
+
+<table class="table table-hover table-striped" id="billList">
+    <thead class="thead-dark">
+        <tr>
+            <th>Fatura ID</th>
+            <th>Fatura Eklenme Tarihi</th>
+            <th>Fatura Açıklaması</th>
+            <th>Faturayı Ekleyen Kişi</th>
+            <th>Faturayı Ekleyen Departman</th>
+            <th>Fatura Tutarı</th>
+            <th>Fatura Belgesi</th>
+            <th>Düzenle</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var bill in Model)
+        {
+            <tr>
+                <td>@bill.Id</td>
+                <td>@bill.BillDateTime.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@bill.BillDescription</td>
+                <td>@bill.BillName</td>
+                <td>@bill.BillDepartment</td>
+                <td>@bill.BillValue.ToString("C")</td>
+                <td>
+                    <a href="@Url.Content("~/Images/" + bill.BillImage)" target="_blank">
+                        <img src="@Url.Content("~/Images/" + bill.BillImage)" style="width:40px; height:40px;" alt="Fatura Belgesi" />
+                    </a>
+                </td>
+                <td>
+                    <a asp-controller="Bills" asp-action="EditBill" asp-route-id="@bill.Id" class="btn btn-primary">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<form asp-action="ExportToExcel" asp-controller="Bills" method="post">
+    <input type="hidden" name="htmlTable" />
+    <input type="hidden" name="selectedDepartment" id="selectedDepartment" value="" />
+    <input type="submit" id="btnSubmit" value="Excel'e kaydet" class="btn btn-primary"/>
+</form>
+
+<script>
+    $(function () {
+        $("form").submit(function (e) {
+            $("input[name='htmlTable']").val($("#billList").html());
+
+            $("#selectedDepartment").val($('#departmentSelect').val());
+        });
+    });
+
+    $(document).ready(function () {
+        $('#departmentSelect').change(function () {
+            var selectedDepartment = $(this).val();
+
+            $.ajax({
+                url: '/Bills/FilterBills',
+                type: 'GET',
+                dataType: 'json',
+                data: { billDepartment: selectedDepartment },
+                success: function (bills) {
+                    var tbody = $('#billList tbody');
+                    tbody.empty();
+
+                    // Her bir bill için bir tablo satırı oluştur
+                    $.each(bills, function (index, bill) {
+                        // Tarih ve para birimi formatlama
+                        var formattedDate = new Date(bill.billDateTime).toLocaleDateString('tr-TR', {
+                            year: 'numeric', month: '2-digit', day: '2-digit',
+                            hour: '2-digit', minute: '2-digit'
+                        });
+                        var formattedValue = new Intl.NumberFormat('tr-TR', {
+                            style: 'currency', currency: 'TRY'
+                        }).format(bill.billValue);
+
+                        var billImage = bill.billImage ? `<a href="/Images/${bill.billImage}" target="_blank">
+                            <img src="/Images/${bill.billImage}" style="width:40px; height:40px;" alt="Fatura Belgesi" />
+                        </a>` : 'No Image';
+
+                        var row = `<tr>
+                            <td>${bill.id}</td>
+                            <td>${formattedDate}</td>
+                            <td>${bill.billDescription}</td>
+                            <td>${bill.billName}</td>
+                            <td>${bill.billDepartment}</td>
+                            <td>${formattedValue}</td>
+                            <td>${billImage}</td>
+                            <td>
+                                <a href="/Bills/EditBill/${bill.id}" class="btn btn-primary">Edit</a>
+                            </td>
+                        </tr>`;
+
+                        tbody.append(row);
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Bir hata oluştu: " + error);
+                }
+            });
+        });
+    });
+
+
+
+</script>

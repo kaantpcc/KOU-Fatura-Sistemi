@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>KOU - Fatura @ViewData["Title"] </title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/BillManagementSystem.styles.css" asp-append-version="true" />
+	<style>
+		/* Sidebar styling */
+
+		body {
+			display: flex;
+			flex-direction: row; /* Yatay düzende öğeleri hizala */
+			min-height: 100vh; /* Viewport'un tamamını kapla */
+			margin: 0; /* Varsayılan tarayıcı kenar boşluklarını kaldır */
+			background: rgb(144,210,109);
+			background: linear-gradient(90deg, rgba(144,210,109,1) 0%, rgba(217,237,191,1) 50%);
+		}
+
+		.sidebar {
+			margin: 25px auto 25px 25px;
+			width: 20%; /* Sidebar için %20 genişlik */
+			background-color: #fff;
+			overflow-x: hidden;
+			border-radius: 12px;
+		}
+
+		.sidebar a {
+			padding: 10px 15px;
+			text-decoration: none;
+			font-size: 18px;
+			color: #333;
+			display: block;
+			border-bottom: 2px solid #333
+		}
+
+		.sidebar a:hover {
+			color: #90d26d;
+		}
+
+		.page-content {
+			margin:25px;
+			width: 77%; /* Ana içerik için %80 genişlik */
+			padding: 20px;
+			border-radius: 12px;
+			background-color: #fff;
+		}
+	</style>
+</head>
+<body>
+	<div class="sidebar">
+		<a asp-area="" asp-controller="Home" asp-action="Index">KOU - Fatura</a>
+		<a asp-area="" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
+		<a asp-area="" asp-controller="Home" asp-action="Privacy">Gizlilik</a>
+		<a asp-area="" asp-controller="Bills" asp-action="AddBill">Fatura Ekle</a>
+		<a asp-area="" asp-controller="Bills" asp-action="ListBills">Kayıtlı Faturalar</a>
+		<a asp-area="" asp-controller="Home" asp-action="Logout">Çıkış Yap</a>
+	</div>
+
+	<div class="page-content">
+		<div class="container">
+			<main role="main" class="pb-3">
+				@RenderBody()
+			</main>
+		</div>
+
+
+	</div>
+
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
