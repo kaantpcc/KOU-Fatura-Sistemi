@@ -30,7 +30,7 @@ namespace BillManagementSystem.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Login(Account viewModel)
 		{
-			var accountData = _context.Accounts.FirstOrDefault(a => a.Email == viewModel.Email && a.Password == viewModel.Password);
+			var accountData = _context.Accounts.First(a => a.Email == viewModel.Email && a.Password == viewModel.Password);
 
 			if (accountData is not null)
 			{
